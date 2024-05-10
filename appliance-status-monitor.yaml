@@ -576,8 +576,9 @@ action:
             state: "on"
           - condition: template
             value_template: "{% if appliance_overload_state_enabled %}{{ states(appliance_suspended_sensor) | float <= 0.0 }}{% else %}true{% endif %}"
-          - condition: template
-            value_template: "{{ states(appliance_socket) == 'on' }}"
+          - condition: state
+            entity_id: !input appliance_socket
+            state: 'on'
           - condition: numeric_state
             entity_id: !input "appliance_power_sensor"
             below: !input "appliance_finishing_power_threshold"
@@ -612,8 +613,9 @@ action:
         # NOTE: "unplugged" state handling logic         #
         ##################################################
       - conditions:
-          - condition: template
-            value_template: "{{ states(appliance_socket) == 'off' }}"
+          - condition: state
+            entity_id: !input appliance_socket
+            state: 'off'
           - condition: not
             conditions:
               - condition: template
@@ -708,8 +710,9 @@ action:
           # IF (and)
           - conditions:
               # the socket is on
-              - condition: template
-                value_template: "{{ states(appliance_socket) == 'on' }}"
+              - condition: state
+                entity_id: !input appliance_socket
+                state: 'on'
               # the power consumption > appliance_starting_power_threshold
               - condition: numeric_state
                 entity_id: !input "appliance_power_sensor"
@@ -933,16 +936,18 @@ action:
               - condition: or
                 conditions:
                   # The socket is on
-                  - condition: template
-                    value_template: "{{ states(appliance_socket) == 'on' }}"
+                  - condition: state
+                    entity_id: !input appliance_socket
+                    state: 'on'
                   - condition: and
                     conditions:
                       # The option that forces the state machine to enter idle is on
                       - condition: template
                         value_template: "{{ appliance_job_completed_when_socket_is_off }}"
                       # The socket is off
-                      - condition: template
-                        value_template: "{{ states(appliance_socket) == 'off' }}"
+                      - condition: state
+                        entity_id: !input appliance_socket
+                        state: 'off'
             sequence:
               # ***** LOG SECTION *****
               - service: system_log.write
@@ -970,8 +975,9 @@ action:
                                     value_template: >
                                       {{ appliance_job_completed_when_socket_is_off }}
                                   # The socket is on
-                                  - condition: template
-                                    value_template: "{{ states(appliance_socket) == 'off' }}"
+                                  - condition: state
+                                    entity_id: !input appliance_socket
+                                    state: 'off'
 
                       # If the state machine isn't already in the job_completed state
                       - condition: not
