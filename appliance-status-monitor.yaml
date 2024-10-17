@@ -400,8 +400,9 @@ action:
             state: "on"
           - condition: template
             value_template: "{% if appliance_suspended_sensor|length > 0 %}{{ states(appliance_suspended_sensor) | float <= 0.0 }}{% else %}true{% endif %}"
-          - condition: template
-            value_template: "{{ states(appliance_socket) == 'on' }}"
+          - condition: state
+            entity_id: !input "appliance_socket"
+            state: "on"
           - condition: numeric_state
             entity_id: !input "appliance_power_sensor"
             below: !input "appliance_finishing_power_threshold"
@@ -425,8 +426,9 @@ action:
             target:
               entity_id: !input "appliance_state_machine"
       - conditions:
-          - condition: template
-            value_template: "{{ states(appliance_socket) == 'off' }}"
+          - condition: state
+            entity_id: !input "appliance_socket"
+            state: "off"
           - condition: not
             conditions:
               - condition: template
@@ -479,8 +481,9 @@ action:
     default:
       - choose:
           - conditions:
-              - condition: template
-                value_template: "{{ states(appliance_socket) == 'on' }}"
+              - condition: state
+                entity_id: !input "appliance_socket"
+                state: "on"
               - condition: numeric_state
                 entity_id: !input "appliance_power_sensor"
                 above: !input "appliance_starting_power_threshold"
@@ -528,8 +531,9 @@ action:
               - condition: state
                 entity_id: !input "appliance_job_cycle"
                 state: "on"
-              - condition: template
-                value_template: "{{ states(appliance_socket) == 'on' }}"
+              - condition: state
+                entity_id: !input "appliance_socket"
+                state: "on"
               - condition: numeric_state
                 entity_id: !input "appliance_power_sensor"
                 below: !input "appliance_finishing_power_threshold"
