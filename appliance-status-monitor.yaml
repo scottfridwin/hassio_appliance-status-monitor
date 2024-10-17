@@ -453,8 +453,9 @@ action:
               entity_id: !input "appliance_state_machine"
           - choose:
               - conditions:
-                  - condition: template
-                    value_template: "{{ states(delayed_job_completion_timer) == 'active' }}"
+                  - condition: state
+                    entity_id: !input delayed_job_completion_timer
+                    state: "active"
                 sequence:
                   - service: timer.cancel
                     data: {}
@@ -490,10 +491,9 @@ action:
             sequence:
               - choose:
                   - conditions:
-                      - condition: template
-                        value_template:
-                          "{{ states(delayed_job_completion_timer) == 'active'
-                          }}"
+                      - condition: state
+                        entity_id: !input delayed_job_completion_timer
+                        state: "active"
                     sequence:
                       - service: timer.cancel
                         data: {}
@@ -540,10 +540,9 @@ action:
             sequence:
               - choose:
                   - conditions:
-                      - condition: template
-                        value_template:
-                          "{{ states(delayed_job_completion_timer) != 'active'
-                          }}"
+                      - condition: state
+                        entity_id: !input delayed_job_completion_timer
+                        state: "active"
                       - condition: not
                         conditions:
                           - condition: trigger
@@ -607,10 +606,9 @@ action:
                   entity_id: !input "appliance_state_machine"
               - choose:
                   - conditions:
-                      - condition: template
-                        value_template:
-                          "{{ states(delayed_job_completion_timer) == 'active'
-                          }}"
+                      - condition: state
+                        entity_id: !input delayed_job_completion_timer
+                        state: "active"
                     sequence:
                       - service: timer.cancel
                         data: {}
